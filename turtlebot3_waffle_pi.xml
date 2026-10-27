@@ -10,9 +10,6 @@
     <material name="silver" rgba="0.78 0.82 0.9 1" specular="0.8" shininess="0.7"/>
     <material name="accent_dark" rgba="0.12 0.14 0.25 1"/>
 
-    <!-- Checkerboard floor so the robot stands out -->
-    <texture name="grid" type="2d" builtin="checker" rgb1="0.13 0.17 0.27" rgb2="0.2 0.26 0.38" width="300" height="300"/>
-    <material name="floor_mat" texture="grid" texuniform="true" texrepeat="1 1" reflectance="0.15"/>
 
     <mesh name="waffle_pi_base" file="waffle_pi_base.stl" scale="0.001 0.001 0.001"/>
     <mesh name="left_tire" file="left_tire.stl" scale="0.001 0.001 0.001"/>
@@ -42,12 +39,6 @@
   </default>
 
   <worldbody>
-    <light pos="0 0 3" dir="0 0 -1" diffuse="0.9 0.9 0.9"/>
-    <geom name="floor"
-      type="plane"
-      pos="0 0 0"
-      size="10 10 0.1"
-      material="floor_mat"/>
     <body name="base" pos="0 0 0">
       <inertial pos="-0.064 0 0.06" mass="1.8" diaginertia="0.01 0.01 0.008"/>
       <joint type="free" name="base_joint"/>

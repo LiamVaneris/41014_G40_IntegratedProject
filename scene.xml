@@ -1,0 +1,18 @@
+<mujoco model="turtlebot_scene">
+  <include file="turtlebot3_waffle_pi.xml"/>
+
+  <asset>
+    <!-- Checkerboard floor so the robot stands out -->
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.13 0.17 0.27" rgb2="0.2 0.26 0.38" width="300" height="300"/>
+    <material name="floor_mat" texture="grid" texuniform="true" texrepeat="1 1" reflectance="0.15"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 3" dir="0 0 -1" diffuse="0.9 0.9 0.9"/>
+    <geom name="floor"
+      type="plane"
+      pos="0 0 0"
+      size="10 10 0.1"
+      material="floor_mat"/>
+  </worldbody>
+</mujoco>

@@ -2,7 +2,7 @@ from pathlib import Path
 import mujoco
 import mujoco.viewer
 
-model = mujoco.MjModel.from_xml_path(str(Path(__file__).parent / "turtlebot3_waffle_pi.xml"))
+model = mujoco.MjModel.from_xml_path(str(Path(__file__).parent / "scene.xml"))
 data = mujoco.MjData(model)
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
