@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 robotis_mujoco_menagerie/
 universal_robots_ur3e/
+mujoco_UR3_tutorial/
