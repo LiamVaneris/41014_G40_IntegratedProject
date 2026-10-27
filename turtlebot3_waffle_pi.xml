@@ -1,0 +1,85 @@
+<mujoco model="turtlebot3_waffle_pi">
+  <compiler angle="radian" meshdir="assets/"/>
+
+  <option cone="elliptic" impratio="10"/>
+
+  <asset>
+    <!-- Colour palette -->
+    <material name="body_orange" rgba="1.0 0.45 0.05 1" specular="0.5" shininess="0.4"/>
+    <material name="wheel_cyan" rgba="0.1 0.85 0.95 1" specular="0.3"/>
+    <material name="silver" rgba="0.78 0.82 0.9 1" specular="0.8" shininess="0.7"/>
+    <material name="accent_dark" rgba="0.12 0.14 0.25 1"/>
+
+    <!-- Checkerboard floor so the robot stands out -->
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.13 0.17 0.27" rgb2="0.2 0.26 0.38" width="300" height="300"/>
+    <material name="floor_mat" texture="grid" texuniform="true" texrepeat="1 1" reflectance="0.15"/>
+
+    <mesh name="waffle_pi_base" file="waffle_pi_base.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_tire" file="left_tire.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_tire" file="right_tire.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="lds" file="lds.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <default>
+    <!-- Wheel motor -->
+    <default class="wheel">
+      <joint limited="false" frictionloss="0.1" armature="0.01"/>
+      <velocity kv="0.1" ctrlrange="-7.88 7.88" ctrllimited="true"/>
+      <default class="wheel_left">
+        <joint axis="0 0 1"/>
+      </default>
+      <default class="wheel_right">
+        <joint axis="0 0 1"/>
+      </default>
+    </default>
+    <!-- Visual / Collision -->
+    <default class="visual">
+      <geom type="mesh" contype="0" conaffinity="0" density="0" group="2"/>
+    </default>
+    <default class="collision">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0 0 3" dir="0 0 -1" diffuse="0.9 0.9 0.9"/>
+    <geom name="floor"
+      type="plane"
+      pos="0 0 0"
+      size="10 10 0.1"
+      material="floor_mat"/>
+    <body name="base" pos="0 0 0">
+      <inertial pos="-0.064 0 0.06" mass="1.8" diaginertia="0.01 0.01 0.008"/>
+      <joint type="free" name="base_joint"/>
+      <geom pos="-0.064 0 0.01" mesh="waffle_pi_base" material="body_orange" class="visual"/>
+      <geom pos="-0.064 0 0.01" mesh="waffle_pi_base" class="collision"/>
+      <geom size="0.005" pos="-0.177 -0.064 0.005" type="sphere" material="silver" friction="0.0001 0.0001 0.0001" solref="0.02 1" solimp="0.95 0.99 0.001" condim="1"/>
+      <geom size="0.005" pos="-0.177 0.064 0.005" type="sphere" material="silver" friction="0.0001 0.0001 0.0001" solref="0.02 1" solimp="0.95 0.99 0.001" condim="1"/>
+      <geom pos="-0.049 0 0.1255" mesh="lds" material="silver" class="visual"/>
+      <geom pos="-0.049 0 0.1255" mesh="lds" class="collision"/>
+      <geom size="0.0075 0.015 0.0135" pos="0.078 0 0.107" type="box" material="wheel_cyan"/>
+      <body name="wheel_left" pos="0 0.144 0.033" quat="0.707388 -0.706825 0 0">
+        <inertial pos="0 0 0" quat="-0.000890159 0.706886 0.000889646 0.707326" mass="0.0284989" diaginertia="2.07126e-05 1.11924e-05 1.11756e-05"/>
+        <joint name="wheel_left" class="wheel_left"/>
+        <geom quat="0.707388 0.706825 0 0" mesh="left_tire" material="wheel_cyan" class="visual"/>
+        <geom quat="0.707388 0.706825 0 0" mesh="left_tire" class="collision"/>
+      </body>
+      <body name="wheel_right" pos="0 -0.144 0.033" quat="0.707388 -0.706825 0 0">
+        <inertial pos="0 0 0" quat="-0.000890159 0.706886 0.000889646 0.707326" mass="0.0284989" diaginertia="2.07126e-05 1.11924e-05 1.11756e-05"/>
+        <joint name="wheel_right" class="wheel_right"/>
+        <geom quat="0.707388 0.706825 0 0" mesh="right_tire" material="wheel_cyan" class="visual"/>
+        <geom quat="0.707388 0.706825 0 0" mesh="right_tire" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <velocity class="wheel_left" name="wheel_left" joint="wheel_left"/>
+    <velocity class="wheel_right" name="wheel_right" joint="wheel_right"/>
+  </actuator>
+
+  <contact>
+    <exclude body1="base" body2="wheel_left"/>
+    <exclude body1="base" body2="wheel_right"/>
+  </contact>
+</mujoco>
