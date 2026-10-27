@@ -2,3 +2,4 @@ __pycache__/
 .venv/
 .DS_Store
 robotis_mujoco_menagerie/
+universal_robots_ur3e/
