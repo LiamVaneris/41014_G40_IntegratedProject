@@ -1,34 +1,13 @@
-import time
+from pathlib import Path
 import mujoco
 import mujoco.viewer
-from pathlib import Path
 
-# Path to the TurtleBot MJCF model
-model_path = Path(__file__).parent / "turtlebot3_waffle_pi.xml"
-
-# Load the MuJoCo model and create simulation data
-model = mujoco.MjModel.from_xml_path(str(model_path))
+model = mujoco.MjModel.from_xml_path(str(Path(__file__).parent / "turtlebot3_waffle_pi.xml"))
 data = mujoco.MjData(model)
-
-# Reset to the default home keyframe defined in the MJCF
-mujoco.mj_resetDataKeyframe(model, data, 0)
-
-# Base joint actuator index ('shoulder_pan') and target velocity in rad/s
-base_actuator_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "shoulder_pan")
-slow_velocity = 0.1  # rad/s (~5.7 deg/s)
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     while viewer.is_running():
-        step_start = time.time()
-
-        # Integrate velocity command into the position actuator's control target
-        data.ctrl[base_actuator_id] += slow_velocity * model.opt.timestep
-
-        # Step the physics
+        data.ctrl[0] = 3.0   # left wheel speed (rad/s)
+        data.ctrl[1] = 3.0   # right wheel speed (rad/s)
         mujoco.mj_step(model, data)
         viewer.sync()
-
-        # Real-time synchronization
-        time_until_next_step = model.opt.timestep - (time.time() - step_start)
-        if time_until_next_step > 0:
-            time.sleep(time_until_next_step)
