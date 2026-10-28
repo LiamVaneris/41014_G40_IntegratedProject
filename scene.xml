@@ -5,14 +5,34 @@
     <!-- Checkerboard floor so the robot stands out -->
     <texture name="grid" type="2d" builtin="checker" rgb1="0.13 0.17 0.27" rgb2="0.2 0.26 0.38" width="300" height="300"/>
     <material name="floor_mat" texture="grid" texuniform="true" texrepeat="1 1" reflectance="0.15"/>
+    <!-- ArUco marker image-->
+    <texture name="aruco_tex" type="2d" file="assets/aruco_0.png"/>
+    <material name="aruco_mat" texture="aruco_tex"/>
   </asset>
 
   <worldbody>
+    <!--Floor-->
     <light pos="0 0 3" dir="0 0 -1" diffuse="0.9 0.9 0.9"/>
     <geom name="floor"
       type="plane"
       pos="0 0 0"
       size="10 10 0.1"
       material="floor_mat"/>
+
+    <!--Chair-->
+    <body name="chair" pos="1.5 1.0 0">
+      <geom name="chair_seat"  type="box" pos="0 0 0.45"       size="0.23 0.23 0.03" rgba="0.6 0.05 0.05 1"/>
+      <geom name="chair_leg1"  type="box" pos="0.2 0.2 0.215"   size="0.03 0.03 0.215" rgba="0.6 0.05 0.05 1"/>
+      <geom name="chair_leg2"  type="box" pos="0.2 -0.2 0.215"  size="0.03 0.03 0.215" rgba="0.6 0.05 0.05 1"/>
+      <geom name="chair_leg3"  type="box" pos="-0.2 0.2 0.215"  size="0.03 0.03 0.215" rgba="0.6 0.05 0.05 1"/>
+      <geom name="chair_leg4"  type="box" pos="-0.2 -0.2 0.215" size="0.03 0.03 0.215" rgba="0.6 0.05 0.05 1"/>
+      <geom name="chair_back"  type="box" pos="0.205 0 0.67"    size="0.03 0.23 0.2"  rgba="0.6 0.05 0.05 1"/>
+    </body>
+
+    <!-- Charging station with ArUco marker facing the robot's start pos-->
+    <body name="dock" pos="3 -1 0">
+      <geom name="dock_base" type="box" pos="0.05 0 0.15" size="0.05 0.2 0.15" rgba="0.2 0.2 0.2 1"/>
+      <geom name="aruco_marker" type="plane" pos="-0.001 0 0.2" zaxis="-1 0 0" size="0.1 0.1 0.01" material="aruco_mat"/>
+    </body>
   </worldbody>
 </mujoco>
