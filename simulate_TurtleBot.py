@@ -2,7 +2,7 @@ import mujoco
 import mujoco.viewer
 from pathlib import Path
 
-# Path to the UR3e MJCF model
+# Path to the turtlebot MJCF model
 model_path = Path(__file__).parent / "turtlebot3_waffle_pi.xml"
 
 # Load the MuJoCo model and create simulation data
