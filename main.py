@@ -63,4 +63,4 @@ renderer.close()
 
 # FOR EVALUATION ONLY - GROUND TRUTH
 x, y = data.qpos[0], data.qpos[1]
-print(f"***EVALUATION ONLY***\nfinal true position: x= {x:.2f}m y= {y:.2f}m")
+print(f"    ***EVALUATION ONLY***\nfinal true position: x= {x:.2f}m y= {y:.2f}m")
