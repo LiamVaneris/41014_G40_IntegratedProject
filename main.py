@@ -6,6 +6,7 @@ from pathlib import Path
 
 from src.estimation.odometry import Odometry, read_wheel_angles, inside_pi_angles
 from src.perception.range_bearing import camera_matrix, measure_range_bearing
+from src.estimation.ekf import EKF
 
 ROOT = Path(__file__).parent
 CAM_NAME = "front_cam"
@@ -32,6 +33,7 @@ c_matrix = camera_matrix(CAM_FOVY_DEG, IMG_W, IMG_H)
 odom = Odometry (x0=0.0, y0=0.0, theta0=0.0, seed=0)
 odom.update(*read_wheel_angles(model,data))
 current_pose = odom.pose.copy()
+ekf = EKF(x0=[0.0, 0.0, 0.0], P0=np.diag([0.01**2, 0.01**2, np.radians(1)**2]))
 
 cam_period = 1.0 / CAM_RATE_HZ
 next_cam_time = 0.0
@@ -47,11 +49,14 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         mujoco.mj_step(model, data)
 
         current_pose = odom.update(*read_wheel_angles(model,data))
+        ekf.predict(odom.last_ds, odom.last_dtheta)
 
         if data.time >= next_cam_time:
             renderer.update_scene(data, camera=CAM_NAME)
             image = renderer.render()
             measurement = measure_range_bearing(image, c_matrix)
+            if measurement is not None:
+                ekf.update(measurement)
             next_cam_time += cam_period
 
             if data.time >= next_print_time:
@@ -83,3 +88,8 @@ error = current_pose - truth
 error[2] = inside_pi_angles(error[2])
 print(f"    ***EVALUATION ONLY***\nFinal true pose x={truth[0]:.3f} y={truth[1]:.3f} th={np.degrees(truth[2]):.1f} deg")
 print(f"Final odometry error x={error[0]:.4f} m y={error[1]:.4f} m th={np.degrees(error[2]):.2f} deg")
+
+#ekf result
+ekf_err = ekf.x - truth
+ekf_err[2] = inside_pi_angles(ekf_err[2])
+print(f"Final EKF error      x={ekf_err[0]:.4f} m y={ekf_err[1]:.4f} m th={np.degrees(ekf_err[2]):.2f} deg")

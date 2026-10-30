@@ -26,6 +26,8 @@ class Odometry:
         self.gain_left = 1.0 + self.rng.normal(0.0, scale_error_std)
         self.gain_right = 1.0 + self.rng.normal(0.0, scale_error_std)
         self.prev = None
+        self.last_ds = 0.0
+        self.last_dtheta = 0.0
 
     def update(self, left_angle, right_angle):
         if self.prev is None:
@@ -44,6 +46,8 @@ class Odometry:
 
         ds = (s_right + s_left)/ 2.0
         dtheta = (s_right - s_left) /self.b
+        self.last_ds = ds
+        self.last_dtheta = dtheta
 
         x, y, theta = self.pose
         self.pose[0] = x + ds * cos(theta + dtheta / 2.0)
