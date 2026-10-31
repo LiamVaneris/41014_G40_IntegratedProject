@@ -7,12 +7,13 @@ from pathlib import Path
 from src.estimation.odometry import Odometry, read_wheel_angles, inside_pi_angles
 from src.perception.range_bearing import camera_matrix, measure_range_bearing
 from src.estimation.ekf import EKF
+from src.control.controller import Controller
 
 ROOT = Path(__file__).parent
 CAM_NAME = "front_cam"
 IMG_W, IMG_H = 640,480
 CAM_FOVY_DEG = 50
-SIM_TIME = 10.0
+SIM_TIME = 30.0
 CAM_RATE_HZ = 10
 WHEEL_SPEED = 3.0 #rad/s
 REAL_TIME = True
@@ -33,7 +34,10 @@ c_matrix = camera_matrix(CAM_FOVY_DEG, IMG_W, IMG_H)
 odom = Odometry (x0=0.0, y0=0.0, theta0=0.0, seed=0)
 odom.update(*read_wheel_angles(model,data))
 current_pose = odom.pose.copy()
+
 ekf = EKF(x0=[0.0, 0.0, 0.0], P0=np.diag([0.01**2, 0.01**2, np.radians(1)**2]))
+
+controller = Controller([(1.0, -1.0), (2.75, -1.0)])
 
 cam_period = 1.0 / CAM_RATE_HZ
 next_cam_time = 0.0
@@ -43,8 +47,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     wall_start = time.time()
 
     while viewer.is_running() and data.time <= SIM_TIME:
-        data.ctrl[0] = WHEEL_SPEED #left wheel
-        data.ctrl[1] = WHEEL_SPEED #right wheel
+        data.ctrl[0], data.ctrl[1] = controller.command(ekf.x)
 
         mujoco.mj_step(model, data)
 
