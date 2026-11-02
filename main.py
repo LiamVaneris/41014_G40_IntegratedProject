@@ -41,6 +41,8 @@ odom.update(*read_wheel_angles(model,data))
 current_pose = odom.pose.copy()
 
 ekf = EKF(x0=[0.0, 0.0, 0.0], P0=np.diag([0.01**2, 0.01**2, np.radians(1)**2]))
+# the below line is for a disturbed trial which has the robot start in the wrong spot to show it correct the error
+#ekf = EKF(x0=[0.2, 0.2, np.radians(10)], P0=np.diag([0.3**2, 0.3**2, np.radians(15)**2]))
 
 controller = Controller([(1.0, -1.0), (2.75, -1.0)])
 
