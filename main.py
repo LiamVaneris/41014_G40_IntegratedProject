@@ -69,7 +69,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
                 else:
                     rng, bearing = measurement
                     print(f" ***CAMERA READINGS***          time={data.time:5.2f}s      range= {rng:.2f}m   bearing={np.degrees(bearing):6.1f}deg")
-                    print(f"***ODOMETRY READINGS***         x={current_pose[0]:.3f}m         y={current_pose[1]:.3f}m        th={np.degrees(current_pose[2]):6.1f}deg")
+                    print(f"***ODOMETRY READINGS***         x={current_pose[0]:.3f}m         y={current_pose[1]:.3f}m           th={np.degrees(current_pose[2]):6.1f}deg")
                     print(f" ***EVALUATION ONLY***  GTRUTH  x={truth[0]:.3f}m         y={truth[1]:.3f}m           th={np.degrees(truth[2]):6.1f}deg\n")
                       
                 
