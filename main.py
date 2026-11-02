@@ -41,7 +41,7 @@ odom.update(*read_wheel_angles(model,data))
 current_pose = odom.pose.copy()
 
 ekf = EKF(x0=[0.0, 0.0, 0.0], P0=np.diag([0.01**2, 0.01**2, np.radians(1)**2]))
-# the below line is for a disturbed trial which has the robot start in the wrong spot to show it correct the error
+# the below line is for a distgurbed trial which has the robot start in the wrong spot to show it correct the error
 #ekf = EKF(x0=[0.2, 0.2, np.radians(10)], P0=np.diag([0.3**2, 0.3**2, np.radians(15)**2]))
 
 controller = Controller([(1.0, -1.0), (2.75, -1.0)])
@@ -49,6 +49,8 @@ controller = Controller([(1.0, -1.0), (2.75, -1.0)])
 cam_period = 1.0 / CAM_RATE_HZ
 next_cam_time = 0.0
 next_print_time = 0.0
+
+log = [] # empty array to store data for our plots
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_RANGEFINDER] = False
@@ -64,6 +66,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         current_pose = odom.update(*read_wheel_angles(model,data))
         ekf.predict(odom.last_ds, odom.last_dtheta)
+        log.append([data.time, *ekf.x, *np.sqrt(np.diag(ekf.P)), *current_pose, *true_pose(data)])
 
         if data.time >= next_cam_time:
             renderer.update_scene(data, camera=CAM_NAME, scene_option=cam_opt)
@@ -107,3 +110,8 @@ print(f"Final odometry error x={error[0]:.4f} m y={error[1]:.4f} m th={np.degree
 ekf_err = ekf.x - truth
 ekf_err[2] = inside_pi_angles(ekf_err[2])
 print(f"Final EKF error      x={ekf_err[0]:.4f} m y={ekf_err[1]:.4f} m th={np.degrees(ekf_err[2]):.2f} deg")
+
+#data for plot
+(ROOT / "results").mkdir(exist_ok=True)
+np.save(ROOT / "results" / "run.npy", np.array(log))
+print("Saved results/run.npy")
