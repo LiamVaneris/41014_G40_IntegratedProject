@@ -50,6 +50,16 @@
       <geom pos="-0.049 0 0.1255" mesh="lds" class="collision"/>
       <geom size="0.0075 0.015 0.0135" pos="0.078 0 0.107" type="box" material="wheel_cyan"/>
       <camera name="front_cam" pos="0.09 0 0.107" xyaxes="0 -1 0 0 0 1" fovy="50"/>
+
+      <!-- lidar scanner -->
+      <body name="top_cylinder" pos="-0.01 0 0.145">
+        <geom name="top_cylinder_geom" type="cylinder" size="0.03 0.01" rgba="1 0 0 1"/>
+        <replicate count="360" euler="0 0 0.0174533">
+          <site name="laser_ray" size="0.001" pos="-0.05 0 0.1" zaxis="1 0 0" rgba="1 0 0 0" />
+        </replicate>
+      </body>
+
+      <!-- wheels -->
       <body name="wheel_left" pos="0 0.144 0.033" quat="0.707388 -0.706825 0 0">
         <inertial pos="0 0 0" quat="-0.000890159 0.706886 0.000889646 0.707326" mass="0.0284989" diaginertia="2.07126e-05 1.11924e-05 1.11756e-05"/>
         <joint name="wheel_left" class="wheel_left"/>
@@ -63,7 +73,12 @@
         <geom quat="0.707388 0.706825 0 0" mesh="right_tire" class="collision"/>
       </body>
     </body>
+
   </worldbody>
+
+  <sensor>
+    <rangefinder name = "laser_scan" site="laser_ray"/>
+  </sensor>
 
   <actuator>
     <velocity class="wheel_left" name="wheel_left" joint="wheel_left"/>
