@@ -142,7 +142,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Assignment brief as per the Sensors_Control_Integrated_Project v2.pdf
+            Assignment brief as per the Sensors_Control_Integrated_Project v2.pdf:
           </p>
           <!-- Abstract -->
           <p>
@@ -181,7 +181,7 @@
     <div class="columns is-centered">
 
       <!-- good for ekf -->
-      <div class="column">
+      <div class="column is-full-width">
         <div class="content">
           <h2 class="title is-3">Results graphs</h2>
           <p>
@@ -195,8 +195,8 @@
       </div>
 
       <!-- Bad for ekf -->
-      <div class="column">
-        <h2 class="title is-3"></h2>
+      <div class="column is-full-width">
+        <h2 class="title is-3"><br></h2>
         <div class="columns is-centered">
           <div class="column content">
             <p>
@@ -217,10 +217,14 @@
 
         <div class="content has-text-justified">
           <p>
-            This is a sample text to show how the results discussion and reflection would look like in your own project. You can use this space to describe the main results obtained, the limitations of your work, and the future work that could be done.
+            Across the graphs, we can see that the EKF is able to estimate the position of the robot with a high degree of accuracy. The estimated position closely follows the ground truth, indicating that the EKF is effectively fusing the odometry and camera measurements. However, in the case of a disturbed start, we can see that the EKF takes some time to converge to the correct position, highlighting the importance of having accurate initial conditions for state estimation.
           </p>
           <p>
-            Orem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            The robot's true initial position starts at (0, 0) with a heading of 0 degrees. however, the starting position the EKF thinks the robot's initial position is differs between the two scenarios. The normal graph starts at the ekf at the true position and orientation of the robot i.e starting with no error and little to no uncertainty of 0.01m and 1 degree. According to the graph we can see that the EKF is able to maintain a low level of uncertainty throughout the trajectory, indicating that the filter is confident in its estimates.
+            In contrast, the disturbed graph starts with the EKF with a postion of (0.2, 0.2) with a heading of 10 degrees. Although this is not too far off the initial true position, the starting error is 0.3m and 15 degrees. As seen the the second graph, the uncertainty band starts wide as the filter knows it is unsure. within the first second the correction has overshot the estimate and caused the estimate to be further from the truth than the positions initial error. The EKF ends over 2 standard deviations outside the true position and heading with a distance of around 0.3m from the true position.
+          </p>
+          <p>
+            Why does the EKF perform so poorly in the disturbed start scenario? The marker is only able to give the range and bearing of the marker. With a small shift in the robots sideways position and an opposite shift in the robots heading, the marker ca be seen at the same target range and bearing. This means that the EKF is unable to distinguish between the two scenarios and is unable to correct the error in the robots correct position and heading from an incorrect one. This is why the EKF is never able to correct itself to the true position and heading of the robot. Although the error is relativly small, without more datapoints such as a second marker or a different camera angle, EKF and odometry alone is not enough to correct the robots position and eliminate the inherent error.
           </p>
         </div>
       </div>
