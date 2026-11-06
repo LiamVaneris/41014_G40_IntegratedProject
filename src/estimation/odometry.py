@@ -1,7 +1,8 @@
 import numpy as np
 from math import pi, sin, cos
 
-from src.config import WHEEL_RADIUS, TRACK_WIDTH
+WHEEL_RADIUS = 0.033
+TRACK_WIDTH = 0.288
 
 def inside_pi_angles(i):
     #keeping every angle between -pi and pi
