@@ -35,9 +35,12 @@
       <geom name="chair_back"  type="box" pos="0.205 0 0.67"    size="0.03 0.23 0.2"  rgba="0.6 0.05 0.05 1"/>
     </body>
 
-    <!--another obstacle (box), uncomment to show lidar works-->
-
-    <!--<geom name="box" type="box" pos="2.0 -1.0 0.2" size="0.1 0.1 0.2" rgba="0 0 1 1"/>-->
+    <!-- Obstacle blocks (tall, thin, easy for the 2D LiDAR to see).
+         They are mocap bodies parked outside the room; main.py / evaluate.py move them
+         into the room, so you never need to edit this file to change the obstacles. -->
+    <body name="block1" mocap="true" pos="8 8 0.5"><geom name="block1_geom" type="box" size="0.1 0.1 0.5" rgba="0 0 1 1"/></body>
+    <body name="block2" mocap="true" pos="8 9 0.5"><geom name="block2_geom" type="box" size="0.1 0.1 0.5" rgba="0 0.6 1 1"/></body>
+    <body name="block3" mocap="true" pos="8 10 0.5"><geom name="block3_geom" type="box" size="0.1 0.1 0.5" rgba="0.3 0 1 1"/></body>
 
     <!-- Charging station with ArUco marker facing the robot's start pos-->
     <body name="dock" pos="3 -1 0">
