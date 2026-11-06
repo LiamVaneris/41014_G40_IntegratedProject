@@ -9,6 +9,7 @@ from src.estimation.odometry import Odometry, read_wheel_angles, inside_pi_angle
 from src.perception.range_bearing import camera_matrix, measure_range_bearing
 from src.estimation.ekf import EKF
 from src.control.controller import Controller
+from src.estimation.ekf import EKF, MARKER
 
 
 ROOT = Path(__file__).parent
@@ -83,6 +84,8 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
                 else:
                     rng, bearing = measurement
                     print(f" ***CAMERA READINGS***          time={data.time:5.2f}s      range= {rng:.2f}m   bearing={np.degrees(bearing):6.1f}deg")
+                    dx, dy = MARKER - truth[:2]
+                    print(f" ***EVALUATION ONLY***  TRUE    range= {np.hypot(dx, dy):.2f}m   bearing={np.degrees(inside_pi_angles(np.arctan2(dy, dx) - truth[2])):6.1f}deg")
                     print(f"***ODOMETRY READINGS***         x={current_pose[0]:.3f}m         y={current_pose[1]:.3f}m           th={np.degrees(current_pose[2]):6.1f}deg")
                     print(f" ***EVALUATION ONLY***  GTRUTH  x={truth[0]:.3f}m         y={truth[1]:.3f}m           th={np.degrees(truth[2]):6.1f}deg\n")
                       
